@@ -1,6 +1,6 @@
 const DB_URLS = {
-    DB_URI: 'mongodb+srv://assemblei-app:nbgudThCvwExTeFo@cluster0.olyqb2l.mongodb.net/db-assemblei?retryWrites=true&w=majority',
-    JWT_SECRET: 'VSantiago3126900989(@)-(@)'
+    DB_URI: process.env.DB_URI,
+    JWT_SECRET: process.env.JWT_SECRET
 }
 
 module.exports = { DB_URLS };
