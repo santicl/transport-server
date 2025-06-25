@@ -1,0 +1,26 @@
+app = "ghl-get"
+primary_region = "bog"
+
+# Configuración de construcción (elige entre Dockerfile o Buildpacks)
+[build]
+  builder = "paketobuildpacks/builder:base"
+
+[[services]]
+  internal_port = 3000
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "10s"
+
+[env]
+  PORT = "3000" 
