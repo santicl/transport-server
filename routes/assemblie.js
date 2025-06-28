@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAssemblei, createAssemblei, updateAssemblei, deleteAssemblei, getAssembleis, getAssembleisNotToken } = require('../controllers/assemblie');
+const { getAssemblei, createAssemblei, updateAssemblei, deleteAssemblei, getAssembleis, getAssembleisNotToken, updateAssembleiNotToken } = require('../controllers/assemblie');
 const checkRol = require('../middleware/rol');
 const authMiddleware = require('../middleware/session');
 
@@ -18,6 +18,9 @@ router.post('/update',
     authMiddleware,
     checkRol(['admin']),
     updateAssemblei);
+
+router.post('/update-not-token/:idAssemblei',
+    updateAssembleiNotToken);
 
 router.delete('/delete',
     authMiddleware,

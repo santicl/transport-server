@@ -28,22 +28,21 @@ const getAssembleis = async (req, res) => {
 }
 
 const getAssembleisNotToken = async (req, res) => {
-  try {
-    const { idAssemblei } = req.params; // ✅ Aquí está la clave
+    try {
+        const { idAssemblei } = req.params; // ✅ Aquí está la clave
 
-    const data = await assemblieModel.findById(idAssemblei);
+        const data = await assemblieModel.findById(idAssemblei);
 
-    if (!data) {
-      return res.status(404).json({ status: false, error: 'No encontrado' });
+        if (!data) {
+            return res.status(404).json({ status: false, error: 'No encontrado' });
+        }
+
+        res.send({ data, status: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'ERROR_GET_ITEM_DETAILS', status: false });
     }
-
-    res.send({ data, status: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'ERROR_GET_ITEM_DETAILS', status: false });
-  }
 };
-
 
 
 const createAssemblei = async (req, res) => {
@@ -119,6 +118,71 @@ const updateAssemblei = async (req, res) => {
     }
 }
 
+const updateAssembleiNotToken = async (req, res) => {
+    try {
+        const { body } = req;
+        const { item, newBusTotal, pubs, dataUpdateAbono, typeUpdate, person } = body;
+        console.log(person, dataUpdateAbono);
+        const { idAssemblei } = req.params; // ✅ Aquí está la clave
+
+        const data = await assemblieModel.findById(idAssemblei);
+
+        // Update Pubs
+        if (typeUpdate === 'pubs') {
+            const data = await assemblieModel.findOneAndUpdate(
+                { _id: idAssemblei, "pubs.nameC": person },
+                { $set: { "pubs.$.paid": dataUpdateAbono.abono } },
+                { new: true }
+            );
+            res.send({ data, typeAbono: true });
+            return
+        }
+        // Update busTotal
+        if (typeUpdate === 'bus') {
+            console.log(item)
+            const data = await assemblieModel.findOneAndUpdate(
+                { _id: item._id },
+                { $set: { busTotal: newBusTotal } },
+                { new: true }
+            );
+            console.log(data);
+            res.send({ data, typeAbono: false });
+            return
+        }
+
+        if (typeUpdate === 'add-pub') {
+            const data = await assemblieModel.findOneAndUpdate(
+                { _id: item._id },
+                { $set: { pubs: pubs } },
+                { new: true }
+            );
+            console.log(data);
+            res.send({ data, typeAbono: false });
+            return
+        }
+
+        if (typeUpdate === 'delete-pub') {
+            const data = await assemblieModel.findOneAndUpdate(
+                { _id: item._id },
+                { $set: { pubs: pubs } },
+                { new: true }
+            );
+            console.log(data);
+            res.send({ data, typeAbono: false });
+            return
+        }
+
+        if (!data) {
+            return res.status(404).json({ status: false, error: 'No encontrado' });
+        }
+
+        res.send({ data, status: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'ERROR_GET_ITEM_DETAILS', status: false });
+    }
+};
+
 const deleteAssemblei = async (req, res) => {
     try {
         const { body } = req;
@@ -130,4 +194,4 @@ const deleteAssemblei = async (req, res) => {
     }
 }
 
-module.exports = { getAssemblei, getAssembleisNotToken, getAssembleis, createAssemblei, updateAssemblei, deleteAssemblei };
+module.exports = { getAssemblei, getAssembleisNotToken, getAssembleis, createAssemblei, updateAssemblei, updateAssembleiNotToken, deleteAssemblei };
